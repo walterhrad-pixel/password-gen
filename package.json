@@ -1,0 +1,24 @@
+{
+  "name": "password-gen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/walterhrad-pixel/password-gen.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/walterhrad-pixel/password-gen/issues"
+  },
+  "homepage": "https://github.com/walterhrad-pixel/password-gen#readme",
+  "devDependencies": {
+    "vite": "^8.0.10"
+  }
+}
