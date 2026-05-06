@@ -1,3 +1,22 @@
+<p align="center">
+<pre align="center">
+██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗██╗  ██╗   ██╗
+██║   ██║██╔══██╗██║   ██║██║  ╚══██╔══╝██║  ╚██╗ ██╔╝
+██║   ██║███████║██║   ██║██║     ██║   ██║   ╚████╔╝
+╚██╗ ██╔╝██╔══██║██║   ██║██║     ██║   ██║    ╚██╔╝
+ ╚████╔╝ ██║  ██║╚██████╔╝███████╗██║   ███████╗██║
+  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝   ╚══════╝╚═╝
+</pre>
+</p>
+ 
+<p align="center">
+  <img src="https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white" />
+  <img src="https://img.shields.io/badge/Supabase-Auth%20%2B%20Postgres-3ECF8E?style=flat-square&logo=supabase&logoColor=black" />
+  <img src="https://img.shields.io/badge/JavaScript-ESM-F7DF1E?style=flat-square&logo=javascript&logoColor=black" />
+  <img src="https://img.shields.io/badge/License-MIT-white?style=flat-square" />
+</p>
+
 # Vaultly — Password Generator
  
 A secure, browser-based password generator with user authentication and a personal password vault. Built with React, Vite, and Supabase. Every password a user generates can be saved with a custom label — something like "Gmail" or "GitHub" — and retrieved the next time they log in, from any device.
@@ -11,63 +30,128 @@ A secure, browser-based password generator with user authentication and a person
 ---
  
 ## What it does
+When a user visits the app, they land on the authentication screen. They register with an email and password or sign in to an existing account. Supabase handles sessions, secure password hashing, and persistence across tabs and devices. Once signed in, the generator loads immediately.
  
-When a user visits the app for the first time, they land on the authentication screen. They either register with an email and password or sign in to an existing account. Supabase handles all of this — session tokens, secure password hashing, persistence across tabs and devices. Once signed in, the main generator loads immediately.
+**Generation modes**
  
-The generator has three modes. Random mode builds a password from character sets the user selects. Pronounceable mode chains syllables together to produce something that sounds like a word, which makes it easier to type or remember while still being secure. Passphrase mode joins random words with dashes, producing something like `Coral-night-jazz-42` that is both long and memorable.
+- **Random** — compose from any combination of uppercase, lowercase, numerals, and symbols. Two optional flags: exclude visually similar characters (`0O1lI|`), or enforce at least one character from each selected class.
+- **Pronounceable** — phonetically structured syllable chains that produce something that sounds like a word. Easier to type and remember without a meaningful drop in entropy.
+- **Passphrase** — 3 to 8 random words joined with hyphens, producing something like `Coral-night-jazz-42`. Long, high-entropy, and far easier to recall than a random string.
+**Strength meter** — a four-bar indicator (Weak, Fair, Good, Strong) recalculates on every change. Passphrases are scored by word count rather than character variety.
  
-Any password the user generates can be saved to their vault. Before saving, they type a label into a small input field next to the Save button. That label gets stored alongside the password in Supabase. When they log in on another machine, their entire vault is there, with every entry labelled exactly as they left it.
+**Vault** — label any generated password and save it. Entries persist in Supabase, scoped to the authenticated user by Row Level Security at the database layer. Individual entries can be deleted, or the vault cleared entirely.
+ 
+**UX** — one-click clipboard copy with a 2-second confirmation state. Press `Enter` anywhere to regenerate. Fully responsive down to 375px.
  
 ---
  
-## Project structure
+## Project Structure
  
 ```
 passgen-vite/
-    index.html                     HTML entry point
-    vite.config.js                 Vite configuration
-    package.json                   Dependencies and scripts
-    package-lock.json              Locked dependency tree
-    .gitignore                     Files excluded from git
- 
-    src/
-        main.jsx                   React entry point — mounts App into the DOM
-        App.jsx                    Root component — generator UI, auth gate, vault save row
-        styles.css                 All styling — generator styles plus auth and vault additions
- 
-        superbase/
-            client.js              Supabase client initialisation — URL and anon key live here
- 
-        hooks/
-            useAuth.js             Authentication — register, login, logout, session state
-            useVault.js            Vault — load, save, delete, and clear saved passwords
- 
-        components/
-            AuthPage.jsx           Animated login and register screen
-            Vault.jsx              Saved password list with label, copy, and delete per entry
- 
-        utils/
-            generatePassword.js    All generation logic — random, pronounceable, passphrase, strength
+├── index.html
+├── vite.config.js
+├── package.json
+├── package-lock.json
+├── .gitignore
+└── src/
+    ├── main.jsx                    React entry point
+    ├── App.jsx                     Root component — generator UI, auth gate, vault save row
+    ├── styles.css                  All styling, design tokens, responsive rules
+    ├── superbase/
+    │   └── client.js               Supabase client initialisation
+    ├── hooks/
+    │   ├── useAuth.js              Auth state — register, login, logout, session persistence
+    │   └── useVault.js             Vault CRUD — load, save, delete, clear
+    ├── components/
+    │   ├── AuthPage.jsx            Animated login and registration screen
+    │   └── Vault.jsx               Saved password list with label, copy, and delete per entry
+    └── utils/
+        └── generatePassword.js     All generation logic and strength calculator
 ```
  
 ---
  
-## How the code was written, step by step
+## Architecture
  
-### Step 1 — Understanding the generator
+No custom backend. All generation logic runs on the client. Supabase handles authentication and database persistence.
  
-The starting point was a plain React password generator with no backend, no accounts, and no persistence. It worked entirely in the browser. Before adding anything new, the first task was reading every line of it — understanding the three generation modes, how the strength meter calculated its score, what the checkboxes and sliders were doing to state, and why the in-session history list worked the way it did. All of that state lived inside a single `App.jsx` using React's `useState` and `useEffect`.
+```
+Browser
+  └── React UI (Vite)
+        ├── useAuth  ──→  Supabase Auth (session tokens, hashing)
+        └── useVault ──→  Supabase Postgres (row-level security)
+```
  
-### Step 2 — Separating the generation logic
+Row Level Security is enforced at the Postgres layer — not just filtered in application code. A signed-in user cannot read or modify another user's vault entries, even with a direct API request using a valid session token.
  
-The generation logic was pulled out of `App.jsx` and moved into its own file before anything else was changed. This made the component easier to read and the logic easier to test mentally.
+---
  
-`src/utils/generatePassword.js` exports four functions.
+## How It Was Built
  
-`generatePassword` takes a length and an options object. The options object tells it which character sets to use — uppercase, lowercase, numbers, symbols — and two extra flags: `excludeSimilar`, which strips visually ambiguous characters like zero and capital O, and `mustContain`, which guarantees at least one character from each enabled set. Internally it uses `crypto.getRandomValues` from the Web Crypto API rather than `Math.random`. This matters because `Math.random` is not cryptographically secure — it is seeded from a predictable source and its output can be predicted if an attacker knows enough about the environment. `crypto.getRandomValues` is backed by the operating system's entropy source and is appropriate for generating passwords. The function fills a `Uint32Array` with random bytes, then maps each value to an index in the character string using the modulo operator. When `mustContain` is enabled, it picks one character from each enabled set first, then fills the remainder, then shuffles the whole array using a Fisher-Yates shuffle that also calls `crypto.getRandomValues` for each swap index so no position in the shuffle is predictable either.
+### Generation logic
  
-`generatePronounceable` assembles a password from a hardcoded list of two-character syllables. It picks syllables at random, capitalises the first one and occasionally capitalises others, then always appends a two-digit number and a symbol. The result sounds like a word when read aloud, which makes it easier to remember or type on a phone keyboard.
+The generation logic lives entirely in `src/utils/generatePassword.js` and exports four functions.
  
-`generatePassphrase` picks random words from a list of 64 common English words and joins them with hyphens. The first word is capitalised. A random number is appended at the end. The result looks like `Amber-river-solar-67` and is long enough to be secure without being impossible to memorise.
+`generatePassword` takes a length and an options object. It uses `crypto.getRandomValues` from the Web Crypto API rather than `Math.random`. This matters — `Math.random` is not cryptographically secure and its output can be predicted. `crypto.getRandomValues` is backed by the operating system's entropy source and is the correct choice for generating passwords. When `mustContain` is enabled, the function guarantees at least one character from each enabled set, fills the remainder, then shuffles the result using a Fisher-Yates shuffle that also calls `crypto.getRandomValues` for every swap index.
  
-`calculateStrength` scores a password from one to four. It looks at the length and the number of distinct character types. Passphrases are scored by word count instead, since character variety does not apply in the same way. The score drives the four-segment coloured bar in the UI.
+`generatePronounceable` assembles passwords from a hardcoded list of two-character syllables, capitalises the first and occasionally others, then appends a two-digit number and a symbol.
+ 
+`generatePassphrase` picks random words from a curated list and joins them with hyphens. The first word is capitalised, a number is appended, and the result is long enough to be secure without being difficult to recall.
+ 
+`calculateStrength` scores a password from one to four based on length and the number of distinct character types. Passphrases are scored by word count. The score drives the four-segment coloured bar.
+ 
+### Authentication
+ 
+`useAuth.js` wraps all Supabase auth methods so no component ever imports Supabase directly.
+ 
+On mount, it calls `supabase.auth.getSession()` to check for an existing valid session. This is what keeps users logged in across page refreshes — if a stored session token exists and has not expired, the user object resolves immediately and the auth screen never appears. It then subscribes to `supabase.auth.onAuthStateChange` for all subsequent state transitions.
+ 
+```javascript
+useEffect(() => {
+  supabase.auth.getSession().then(({ data }) => {
+    setUser(data.session?.user ?? null)
+    setLoading(false)
+  })
+ 
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    setUser(session?.user ?? null)
+  })
+ 
+  return () => subscription.unsubscribe()
+}, [])
+```
+ 
+The cleanup function calls `subscription.unsubscribe()` on unmount to prevent memory leaks. The `register`, `login`, and `logout` functions translate Supabase error strings into readable messages a non-technical user can act on.
+ 
+### Vault
+ 
+`useVault.js` handles all database operations. It takes the current user as its only argument and re-runs its load query whenever the user changes.
+ 
+The load query does not need a `WHERE user_id = ...` clause — Row Level Security filters automatically at the database level. Supabase returns only the rows that belong to the authenticated user. After every insert or delete, the local entries array updates immediately to keep the UI in sync without an extra network round trip.
+ 
+### Auth screen
+ 
+`AuthPage.jsx` manages a three-stage sequence: a brief splash screen that renders for 1.8 seconds, a landing screen with call-to-action buttons, and the form itself. The form slides up from below with a CSS `transform: translateY` transition. When authentication succeeds, Supabase fires `onAuthStateChange`, the user state in `App.jsx` updates, and React renders the generator. The auth screen does not navigate anywhere — it simply disappears.
+ 
+### Vault component
+ 
+`Vault.jsx` returns null when the entries array is empty, so the vault card does not appear until the user has saved something. Each entry shows the label, the password string in monospace with ellipsis truncation, a copy button, and a delete button. Timestamps use `toLocaleString` with `dateStyle: 'medium'` and `timeStyle: 'short'` — the user's local timezone, no date arithmetic required.
+ 
+### Root component
+ 
+`App.jsx` holds all generator state and connects every part of the application. The render function has three branches — loading spinner, auth screen, or generator — which prevents the auth screen from flashing on page load while the session check resolves.
+ 
+Generator options are each listed individually as `useEffect` dependencies rather than passing the whole options object, which avoids triggering regeneration on unrelated renders. A second `useEffect` attaches a global `keydown` listener for Enter-to-regenerate with a cleanup function that removes it on unmount.
+ 
+---
+ 
+## Setup
+ 
+### 1. Clone and install
+ 
+```bash
+git clone https://github.com/walterhrad-pixel/passgen
+cd passgen
+npm install
+```
