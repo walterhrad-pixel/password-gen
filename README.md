@@ -1,3 +1,20 @@
+```
+██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗██╗  ██╗   ██╗
+██║   ██║██╔══██╗██║   ██║██║  ╚══██╔══╝██║  ╚██╗ ██╔╝
+██║   ██║███████║██║   ██║██║     ██║   ██║   ╚████╔╝
+╚██╗ ██╔╝██╔══██║██║   ██║██║     ██║   ██║    ╚██╔╝
+ ╚████╔╝ ██║  ██║╚██████╔╝███████╗██║   ███████╗██║
+  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝   ╚══════╝╚═╝
+```
+ 
+<p align="center">
+  <img src="https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white" />
+  <img src="https://img.shields.io/badge/Supabase-Auth%20%2B%20Postgres-3ECF8E?style=flat-square&logo=supabase&logoColor=black" />
+  <img src="https://img.shields.io/badge/JavaScript-ESM-F7DF1E?style=flat-square&logo=javascript&logoColor=black" />
+  <img src="https://img.shields.io/badge/License-MIT-white?style=flat-square" />
+</p>
+---
 # Vaultly — Password Generator
  
 A secure, browser-based password generator with user authentication and a personal password vault. Built with React, Vite, and Supabase. Every password a user generates can be saved with a custom label — something like "Gmail" or "GitHub" — and retrieved the next time they log in, from any device.
