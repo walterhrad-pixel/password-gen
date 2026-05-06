@@ -352,3 +352,188 @@ const buildStyles = (dark) => `
     width: 100%;
   }
 `
+
+// ── Vault mascot SVG ──────────────────────────────────────────────────────────
+function VaultMascot({ size = 120, smiling = false }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="54" fill="#1E2440" stroke="#F5C842" strokeWidth="4"/>
+      <ellipse cx="38" cy="36" rx="14" ry="10" fill="rgba(255,255,255,0.06)" transform="rotate(-20 38 36)"/>
+      <ellipse cx="44" cy="52" rx="9" ry="10" fill="white"/>
+      <ellipse cx="76" cy="52" rx="9" ry="10" fill="white"/>
+      <circle cx="46" cy="54" r="5" fill="#1E2440"/>
+      <circle cx="78" cy="54" r="5" fill="#1E2440"/>
+      <circle cx="48" cy="52" r="2" fill="white"/>
+      <circle cx="80" cy="52" r="2" fill="white"/>
+      {smiling ? (
+        <path d="M47 68 Q60 82 73 68" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none"/>
+      ) : (
+        <path d="M47 70 Q60 80 73 70" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none"/>
+      )}
+      <circle cx="88" cy="84" r="12" fill="#0B0E1A" stroke="#F5C842" strokeWidth="2"/>
+      <circle cx="93" cy="84" r="3" fill="#F5C842"/>
+      <rect x="108" y="50" width="8" height="28" rx="4" fill="#F5C842"/>
+      <rect x="109" y="54" width="4" height="20" rx="2" fill="#D4A500"/>
+    </svg>
+  )
+}
+
+//Main component 
+export default function AuthPage({ login, register, error }) {
+  const [dark, setDark] = useState(false)
+  const [screen, setScreen] = useState('splash')
+  const [splashOut, setSplashOut] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [localError, setLocalError] = useState('')
+
+  // Check system preference on mount
+  useEffect(() => {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    setDark(prefersDark)
+  }, [])
+
+  // Splash auto-advance
+  useEffect(() => {
+    if (screen !== 'splash') return
+    const t1 = setTimeout(() => setSplashOut(true), 1800)
+    const t2 = setTimeout(() => setScreen('landing'), 2400)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
+  }, [screen])
+
+  function openForm(type) {
+    setEmail('')
+    setPassword('')
+    setLocalError('')
+    setScreen(type)
+  }
+
+  function goBack() {
+    setScreen('landing')
+    setLocalError('')
+  }
+
+  async function handleSubmit() {
+    setLocalError('')
+    if (!email || !password) { setLocalError('Please fill in all fields.'); return }
+    if (password.length < 6) { setLocalError('Password must be at least 6 characters.'); return }
+
+    setBusy(true)
+    try {
+      if (screen === 'register') {
+        await register?.(email, password)
+      } else {
+        await login?.(email, password)
+      }
+    } catch {
+      setLocalError(error || 'Something went wrong. Please try again.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const displayError = localError || error || ''
+  const isForm = screen === 'register' || screen === 'login'
+
+  return (
+    <>
+      <style>{buildStyles(dark)}</style>
+      <div className="vaultly-auth">
+
+        {/* ── Dark mode toggle ── */}
+        {screen !== 'splash' && (
+          <button
+            className="va-theme-toggle"
+            onClick={() => setDark(d => !d)}
+            aria-label="Toggle dark mode"
+          >
+            <span className="va-theme-knob">{dark ? '☀' : '☾'}</span>
+          </button>
+        )}
+
+        {/* ── Screen 1: Splash ── */}
+        <div className={`va-splash ${splashOut ? 'exit' : ''}`}>
+          <VaultMascot size={Math.min(180, window.innerWidth * 0.35)} smiling />
+          <span className="va-splash-name">Vaultly</span>
+        </div>
+
+        {/* ── Screen 2: Landing ── */}
+        <div className={`va-landing ${screen === 'landing' ? 'visible' : ''}`}>
+          <div className="va-orb va-orb-1" />
+          <div className="va-orb va-orb-2" />
+          <div className="va-landing-inner">
+            <div className="va-mascot-wrap">
+              <VaultMascot size={Math.min(160, window.innerWidth * 0.28)} smiling />
+              <div style={{ textAlign: 'center' }}>
+                <p className="va-brand">Vaultly</p>
+                <p className="va-tagline">Your passwords, safe forever.</p>
+              </div>
+            </div>
+            <div className="va-btns">
+              <button className="va-btn-primary" onClick={() => openForm('register')}>
+                Get started
+              </button>
+              <button className="va-btn-secondary" onClick={() => openForm('login')}>
+                I already have an account
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Screen 3 & 4: Auth forms ── */}
+        <div className={`va-form-screen ${isForm ? 'open' : ''}`}>
+          <div className="va-form-top">
+            <button className="va-back-btn" onClick={goBack}>←</button>
+            <VaultMascot size={90} smiling={!displayError} />
+            <p className="va-form-title">
+              {screen === 'register' ? 'Create your vault' : 'Welcome back!'}
+            </p>
+            <p className="va-form-sub">
+              {screen === 'register'
+                ? 'Privacy is not an option...'
+                : 'Sign in to access your vault'}
+            </p>
+          </div>
+
+          <div className="va-form-body">
+            {displayError && (
+              <div className="va-error show">{displayError}</div>
+            )}
+            <div className="va-field">
+              <label>Email</label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                autoComplete="email"
+              />
+            </div>
+            <div className="va-field">
+              <label>Password</label>
+              <input
+                type="password"
+                placeholder="Min 6 characters"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                autoComplete={screen === 'login' ? 'current-password' : 'new-password'}
+                onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+              />
+            </div>
+            <button
+              className="va-form-submit"
+              onClick={handleSubmit}
+              disabled={busy}
+            >
+              {busy
+                ? (screen === 'register' ? 'Creating vault…' : 'Opening vault…')
+                : (screen === 'register' ? 'Create account' : 'Sign in')}
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </>
+  )
+}
