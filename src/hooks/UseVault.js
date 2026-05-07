@@ -6,6 +6,7 @@ export function useVault(user) {
   const [entries, setEntries] = useState([])
   const [saving, setSaving]   = useState(false)
 
+  
   useEffect(() => {
     if (!user) { setEntries([]); return }
     loadEntries()
