@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 
 const buildStyles = (dark) => `
@@ -18,7 +17,7 @@ const buildStyles = (dark) => `
     transition: background 300ms ease;
   }
 
- // Dark mode toggle
+  /* ── Dark mode toggle ── */
   .va-theme-toggle {
     position: fixed;
     top: 18px;
@@ -49,7 +48,7 @@ const buildStyles = (dark) => `
     font-size: 12px;
   }
 
-  // Screen 1: Splash
+  /* ── Screen 1: Splash ── */
   .va-splash {
     position: fixed;
     inset: 0;
@@ -77,7 +76,7 @@ const buildStyles = (dark) => `
     margin-top: 20px;
   }
 
-  // Screen 2: Landing 
+  /* ── Screen 2: Landing ── */
   .va-landing {
     position: fixed;
     inset: 0;
@@ -189,7 +188,7 @@ const buildStyles = (dark) => `
     transform: translateY(0);
   }
 
-  // Top yellow header 
+  /* Top yellow header */
   .va-form-top {
     background: #F5C842;
     padding: clamp(40px, 8vh, 72px) clamp(24px, 6vw, 80px) clamp(28px, 5vh, 48px);
@@ -235,7 +234,7 @@ const buildStyles = (dark) => `
     color: rgba(0,0,0,0.5);
   }
 
-  // Form body
+  /* Form body */
   .va-form-body {
     flex: 1;
     padding: clamp(24px, 5vh, 48px) clamp(24px, 6vw, 80px) clamp(32px, 6vh, 60px);
@@ -318,7 +317,7 @@ const buildStyles = (dark) => `
   .va-form-submit:active { transform: translateY(2px); box-shadow: 0 2px 0 #D4A500; }
   .va-form-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: 0 4px 0 #D4A500; }
 
-  // Decorative orbs for landing 
+  /* Decorative bg orbs for landing */
   .va-orb {
     position: fixed;
     border-radius: 50%;
@@ -378,21 +377,17 @@ function VaultMascot({ size = 120, smiling = false }) {
   )
 }
 
-//Main component 
+// ── Main component ────────────────────────────────────────────────────────────
 export default function AuthPage({ login, register, error }) {
-  const [dark, setDark] = useState(false)
+  const [dark, setDark] = useState(
+    () => window.matchMedia('(prefers-color-scheme: dark)').matches
+  )
   const [screen, setScreen] = useState('splash')
   const [splashOut, setSplashOut] = useState(false)
   const [busy, setBusy] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [localError, setLocalError] = useState('')
-
-  // Check system preference on mount
-  useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    setDark(prefersDark)
-  }, [])
 
   // Splash auto-advance
   useEffect(() => {

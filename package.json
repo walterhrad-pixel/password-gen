@@ -1,24 +1,20 @@
 {
   "name": "password-gen",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/walterhrad-pixel/password-gen.git"
+  "dependencies": {
+    "@supabase/supabase-js": "^2.104.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/walterhrad-pixel/password-gen/issues"
-  },
-  "homepage": "https://github.com/walterhrad-pixel/password-gen#readme",
   "devDependencies": {
-    "vite": "^8.0.10"
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.4.21"
   }
 }

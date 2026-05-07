@@ -27,7 +27,6 @@ function VaultEntry({ entry, onDelete }) {
 
   const date = entry.created_at ? new Date(entry.created_at) : new Date()
 
-
   async function copy() {
     await navigator.clipboard.writeText(entry.password)
     setCopied(true)
@@ -37,17 +36,14 @@ function VaultEntry({ entry, onDelete }) {
   return (
     <div className="history-item">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-        //Label
         <span className="vault-label">
           {entry.label || <em style={{ color: 'var(--muted)', fontStyle: 'italic' }}>unlabeled</em>}
         </span>
 
-        //Password (truncated)
         <span className="history-password" style={{ flex: 1 }}>
           {entry.password}
         </span>
 
-        // Actions
         <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
           <button
             className="history-clear"
@@ -67,7 +63,6 @@ function VaultEntry({ entry, onDelete }) {
         </div>
       </div>
 
-      //Date
       <span style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '4px', display: 'block' }}>
         {date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
       </span>

@@ -503,13 +503,12 @@ body {
 
 .history-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  flex-direction: column;
+  gap: 4px;
   padding: 10px 12px;
   background: rgba(0, 0, 0, 0.16);
   border-radius: 8px;
-  cursor: pointer;
+  cursor: default;
   transition: all 150ms ease;
 }
 
@@ -811,21 +810,6 @@ body {
   white-space: nowrap;
 }
 
-.vault-save-btn:hover:not(:disabled) {
-  background: rgba(16, 185, 129, 0.16);
-}
-
-.vault-save-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.vault-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--accent);
-  flex-shrink: 0;
-}
 .vault-save-btn:hover:not(:disabled) {
   background: rgba(16, 185, 129, 0.16);
 }

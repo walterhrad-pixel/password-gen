@@ -10,8 +10,8 @@
 </p>
  
 <p align="center">
-  <img src="https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black" />
-  <img src="https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white" />
   <img src="https://img.shields.io/badge/Supabase-Auth%20%2B%20Postgres-3ECF8E?style=flat-square&logo=supabase&logoColor=black" />
   <img src="https://img.shields.io/badge/JavaScript-ESM-F7DF1E?style=flat-square&logo=javascript&logoColor=black" />
   <img src="https://img.shields.io/badge/License-MIT-white?style=flat-square" />
@@ -151,7 +151,7 @@ Generator options are each listed individually as `useEffect` dependencies rathe
 ### 1. Clone and install
  
 ```bash
-git clone https://github.com/walterhrad-pixel/passgen
-cd passgen
+git clone https://github.com/walterhrad-pixel/password-gen
+cd password-gen
 npm install
 ```
