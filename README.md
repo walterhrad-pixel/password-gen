@@ -19,13 +19,7 @@
 
 # Vaultly — Password Generator
  
-A secure, browser-based password generator with user authentication and a personal password vault. Built with React, Vite, and Supabase. Every password a user generates can be saved with a custom label — something like "Gmail" or "GitHub" — and retrieved the next time they log in, from any device.
- 
----
- 
-## Live Demo
-
-(password-gen-lac.vercel.app)
+A secure, browser-based password generator with user authentication and a personal password vault. Built with React, Vite, and Supabase. Every password a user generates can be saved with a custom label something like "Gmail" or "GitHub" and retrieved the next time they log in, from any device.
  
 ---
  
