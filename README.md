@@ -22,7 +22,11 @@
 A secure, browser-based password generator with user authentication and a personal password vault. Built with React, Vite, and Supabase. Every password a user generates can be saved with a custom label something like "Gmail" or "GitHub" and retrieved the next time they log in, from any device.
  
 ---
- 
+
+ ## Live Demo
+
+[password-gen-lac.vercel.app](https://password-gen-lac.vercel.app/)
+
 ## What it does
 When a user visits the app, they land on the authentication screen. They register with an email and password or sign in to an existing account. Supabase handles sessions, secure password hashing, and persistence across tabs and devices. Once signed in, the generator loads immediately.
  
