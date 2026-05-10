@@ -267,7 +267,7 @@ Weak, reused passwords are not just a personal inconvenience. They are an attack
  
 ---
  
-## Roadmap
+## Roadmap (Future Improvements)
  
 - Client-side encryption before vault writes
 - `zxcvbn` integration for accurate strength estimation
@@ -306,4 +306,4 @@ To request permission, open an issue or contact the author directly through GitH
  
 ---
  
-Built by [Walter](https://github.com/walterhrad-pixel).
+Built with ❤️ by [Walter](https://github.com/walterhrad-pixel).
