@@ -1,4 +1,5 @@
-// src/App.jsx
+// Copyright (c) 2026 Walter Onyango. All rights reserved.
+// See LICENSE in the repository root for terms of use.
 import { useState, useEffect, useCallback } from 'react'
 
 import { generatePassword, generatePronounceable, generatePassphrase, calculateStrength }
