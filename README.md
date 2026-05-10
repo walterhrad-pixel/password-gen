@@ -290,7 +290,7 @@ Weak, reused passwords are not just a personal inconvenience. They are an attack
  
 ## License
  
-Copyright &copy; 2025 Walter Onyango. All rights reserved.
+Copyright &copy; 2026 Walter Onyango. All rights reserved.
  
 This software and its source code are the exclusive intellectual property of Walter Onyango. The code is made publicly visible for portfolio and reference purposes only.
  
