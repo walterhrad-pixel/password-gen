@@ -290,9 +290,20 @@ Weak, reused passwords are not just a personal inconvenience. They are an attack
  
 ## License
  
-MIT
+Copyright &copy; 2025 Walter Onyango. All rights reserved.
+ 
+This software and its source code are the exclusive intellectual property of Walter Onyango. The code is made publicly visible for portfolio and reference purposes only.
+ 
+**The following are strictly prohibited without explicit written permission from the copyright holder:**
+ 
+- Copying or reproducing any part of this codebase
+- Using this code or any derivative of it in a commercial or non-commercial product
+- Distributing, sublicensing, or selling this code or any portion of it
+- Deploying this software under a different name or brand
+Viewing this repository does not grant any rights, license, or permission to use the code contained within it. Any unauthorized use constitutes copyright infringement and may be subject to legal action under applicable intellectual property law.
+ 
+To request permission, open an issue or contact the author directly through GitHub.
  
 ---
  
 Built by [Walter](https://github.com/walterhrad-pixel).
-
