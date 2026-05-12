@@ -266,8 +266,6 @@ Weak, reused passwords are not just a personal inconvenience. They are an attack
  
 **No guest mode.** Password generation requires authentication. This prevents anonymous usage and scopes all data to a user, but it adds friction for anyone who only wants to generate without saving.
  
-**Go module.** `go.mod` references Go 1.26.2, which does not exist at the time of writing. The module is not connected to the Vite build and appears to be groundwork for a planned companion tool — likely a CLI for offline generation.
- 
 ---
  
 ## Roadmap (Future Improvements)
