@@ -143,7 +143,7 @@ Generator options are each listed individually as `useEffect` dependencies rathe
  
 ---
  
-## Setup
+## Setup(The Roadmap i used)
  
 ### 1. Clone and install
  
