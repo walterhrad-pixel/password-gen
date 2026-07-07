@@ -45,7 +45,7 @@ When a user visits the app, they land on the authentication screen. They registe
 ## Project Structure
  
 ```
-passgen-vite/
+password-gen/
 ├── index.html
 ├── vite.config.js
 ├── package.json
