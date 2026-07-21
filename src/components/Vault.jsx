@@ -24,6 +24,7 @@ function TrashIcon() {
 
 function VaultEntry({ entry, onDelete }) {
   const [copied, setCopied] = useState(false)
+  const [confirming, setConfirming] = useState(false)
 
   const date = entry.created_at ? new Date(entry.created_at) : new Date()
 
@@ -31,6 +32,15 @@ function VaultEntry({ entry, onDelete }) {
     await navigator.clipboard.writeText(entry.password)
     setCopied(true)
     setTimeout(() => setCopied(false), 1800)
+  }
+
+  function handleDeleteClick() {
+    if (!confirming) {
+      setConfirming(true)
+      setTimeout(() => setConfirming(false), 3000)
+      return
+    }
+    onDelete(entry.id)
   }
 
   return (
@@ -55,10 +65,11 @@ function VaultEntry({ entry, onDelete }) {
           </button>
           <button
             className="history-clear"
-            onClick={() => onDelete(entry.id)}
-            title="Delete"
+            onClick={handleDeleteClick}
+            title={confirming ? 'Click again to confirm delete' : 'Delete'}
+            style={confirming ? { color: '#e5484d', borderColor: '#e5484d' } : undefined}
           >
-            <TrashIcon />
+            {confirming ? 'Sure?' : <TrashIcon />}
           </button>
         </div>
       </div>
@@ -71,13 +82,31 @@ function VaultEntry({ entry, onDelete }) {
 }
 
 export default function Vault({ entries, deleteEntry, clearAll }) {
+  const [confirmingClear, setConfirmingClear] = useState(false)
+
   if (!entries.length) return null
+
+  function handleClearClick() {
+    if (!confirmingClear) {
+      setConfirmingClear(true)
+      setTimeout(() => setConfirmingClear(false), 3000)
+      return
+    }
+    setConfirmingClear(false)
+    clearAll()
+  }
 
   return (
     <div className="history-card">
       <div className="history-header">
         <span className="history-title">Vault</span>
-        <button className="history-clear" onClick={clearAll}>Clear all</button>
+        <button
+          className="history-clear"
+          onClick={handleClearClick}
+          style={confirmingClear ? { color: '#e5484d', borderColor: '#e5484d' } : undefined}
+        >
+          {confirmingClear ? `Clear all ${entries.length}? Click to confirm` : 'Clear all'}
+        </button>
       </div>
       <div className="history-list">
         {entries.map((entry) => (
