@@ -1,15 +1,15 @@
-// Copyright (c) 2026 Walter Onyango. All rights reserved.
-// See LICENSE in the repository root for terms of use.
 import { useState, useEffect, useCallback } from 'react'
 
 import { generatePassword, generatePronounceable, generatePassphrase, calculateStrength }
   from './utils/generatePassword'
 
-import { useAuth }  from './hooks/useAuth'
-import { useVault } from './hooks/useVault'
+import { useAuth }     from './hooks/useAuth'
+import { useVault }    from './hooks/useVault'
+import { useVaultKey } from './hooks/useVaultKey'
 
-import AuthPage from './components/AuthPage'
-import Vault    from './components/Vault'
+import AuthPage    from './components/AuthPage'
+import Vault       from './components/Vault'
+import VaultUnlock from './components/VaultUnlock'
 
 function App() {
 
@@ -29,8 +29,14 @@ function App() {
     mustContain:    false,
   })
 
+  const [guest, setGuest] = useState(false)
+
   const { user, loading, error: authError, register, login, logout } = useAuth()
-  const { entries, saving, savePassword, deleteEntry, clearAll } = useVault(user)
+  const vaultKeyState = useVaultKey(user)
+  const { vaultKey, needsSetup, checking: checkingVault } = vaultKeyState
+  const { entries, saving, loadError, saveError, savePassword, deleteEntry, clearAll } = useVault(user, vaultKey)
+
+  useEffect(() => { if (user) setGuest(false) }, [user])
 
   const strength = calculateStrength(password, options, mode)
 
@@ -69,6 +75,7 @@ function App() {
   }
 
   async function handleSave() {
+    if (!vaultKey) return
     await savePassword(password, label)
     setLabel('')
   }
@@ -103,15 +110,21 @@ function App() {
     )
   }
 
-  if (!user) {
-    return <AuthPage login={login} register={register} error={authError} />
+  if (!user && !guest) {
+    return (
+      <AuthPage
+        login={login}
+        register={register}
+        error={authError}
+        onGuest={() => setGuest(true)}
+      />
+    )
   }
 
   return (
     <div className="page">
       <div className="shell">
 
-        {/* Top bar */}
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -119,10 +132,12 @@ function App() {
           padding: '0 4px',
         }}>
           <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-            Hey, <span style={{ color: 'var(--accent)' }}>{user.email.split('@')[0]}</span>
+            {user
+              ? <>Hey, <span style={{ color: 'var(--accent)' }}>{user.email.split('@')[0]}</span></>
+              : <span style={{ color: 'var(--muted)' }}>Browsing as guest — nothing will be saved</span>}
           </span>
           <button
-            onClick={logout}
+            onClick={user ? logout : () => setGuest(false)}
             style={{
               background: 'none',
               border: '1px solid var(--border)',
@@ -133,11 +148,10 @@ function App() {
               cursor: 'pointer',
             }}
           >
-            Sign out
+            {user ? 'Sign out' : 'Sign in to save'}
           </button>
         </div>
 
-        {/* Main card */}
         <div className="card">
 
           <header className="header">
@@ -177,6 +191,11 @@ function App() {
             </div>
             <span className="strength-label">{strength.label}</span>
           </div>
+          {strength.crackTime && (
+            <p style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '-8px', marginBottom: '8px' }}>
+              Est. time to crack: {strength.crackTime}
+            </p>
+          )}
 
           <div className="options-section">
 
@@ -268,29 +287,55 @@ function App() {
             </button>
           </div>
 
-          {/* Save to vault */}
-          <div className="vault-save-row">
-            <input
-              className="vault-input"
-              type="text"
-              placeholder="Label it — e.g. Gmail, GitHub, Netflix…"
-              value={label}
-              onChange={(e) => setLabel(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-            />
-            <button
-              className="vault-save-btn"
-              onClick={handleSave}
-              disabled={!password || saving}
-            >
-              {saving ? 'Saving…' : 'Save'}
-            </button>
-          </div>
+          {user && vaultKey && (
+            <div className="vault-save-row">
+              <input
+                className="vault-input"
+                type="text"
+                placeholder="Label it — e.g. Gmail, GitHub, Netflix…"
+                value={label}
+                onChange={(e) => setLabel(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+              />
+              <button
+                className="vault-save-btn"
+                onClick={handleSave}
+                disabled={!password || saving}
+              >
+                {saving ? 'Saving…' : 'Save'}
+              </button>
+            </div>
+          )}
+          {saveError && (
+            <p style={{ fontSize: '12px', color: '#e5484d', textAlign: 'center', marginTop: '4px' }}>
+              {saveError}
+            </p>
+          )}
+
+          {!user && (
+            <p style={{ fontSize: '12px', color: 'var(--muted)', textAlign: 'center', marginTop: '8px' }}>
+              Sign in to label and save passwords to your vault.
+            </p>
+          )}
 
         </div>
 
-        {/* Vault */}
-        <Vault entries={entries} deleteEntry={deleteEntry} clearAll={clearAll} />
+        {user && checkingVault && (
+          <p style={{ fontSize: '12px', color: 'var(--muted)', textAlign: 'center' }}>Checking vault…</p>
+        )}
+        {user && !checkingVault && !vaultKey && (
+          <VaultUnlock vaultKeyState={vaultKeyState} needsSetup={needsSetup} />
+        )}
+        {user && vaultKey && (
+          <>
+            {loadError && (
+              <p style={{ fontSize: '12px', color: 'var(--danger, #e5484d)', textAlign: 'center' }}>
+                {loadError}
+              </p>
+            )}
+            <Vault entries={entries} deleteEntry={deleteEntry} clearAll={clearAll} />
+          </>
+        )}
 
         <footer className="footer">
           <a href="https://github.com/walterhrad-pixel" target="_blank" rel="noopener noreferrer">
