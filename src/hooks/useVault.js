@@ -1,34 +1,55 @@
-// src/hooks/useVault.js
 import { useState, useEffect } from 'react'
-import { supabase } from '../superbase/client'
+import { supabase } from '../supabase/client'
+import { encryptJSON, decryptJSON } from '../utils/vaultCrypto'
 
-export function useVault(user) {
+export function useVault(user, vaultKey) {
   const [entries, setEntries] = useState([])
-  const [saving, setSaving]   = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [loadError, setLoadError] = useState(null)
+  const [saveError, setSaveError] = useState(null)
 
-  
   useEffect(() => {
-    if (!user) { setEntries([]); return }
+    if (!user || !vaultKey) { setEntries([]); return }
     loadEntries()
-  }, [user])
+  }, [user, vaultKey])
 
   async function loadEntries() {
-    const { data } = await supabase
+    setLoadError(null)
+    const { data, error } = await supabase
       .from('passwords')
-      .select('*')
+      .select('id, ciphertext, iv, created_at')
       .order('created_at', { ascending: false })
-    setEntries(data ?? [])
+
+    if (error) { setLoadError('Could not load vault entries.'); return }
+
+    const decrypted = []
+    for (const row of data ?? []) {
+      try {
+        const { password, label } = await decryptJSON(vaultKey, row.ciphertext, row.iv)
+        decrypted.push({ id: row.id, password, label, created_at: row.created_at })
+      } catch {
+        setLoadError('Some entries could not be decrypted.')
+      }
+    }
+    setEntries(decrypted)
   }
 
   async function savePassword(password, label) {
-    if (!user || !password) return
+    if (!user || !vaultKey || !password) return
     setSaving(true)
-    await supabase.from('passwords').insert({
-      user_id:  user.id,
-      password,
-      label:    label.trim(),
+    setSaveError(null)
+    const { ciphertext, iv } = await encryptJSON(vaultKey, { password, label: label.trim() })
+    const { error } = await supabase.from('passwords').insert({
+      user_id: user.id,
+      ciphertext,
+      iv,
     })
-    await loadEntries()
+    if (error) {
+      console.error('Vault save failed:', error)
+      setSaveError(error.message || 'Could not save this password.')
+    } else {
+      await loadEntries()
+    }
     setSaving(false)
   }
 
@@ -42,5 +63,5 @@ export function useVault(user) {
     setEntries([])
   }
 
-  return { entries, saving, savePassword, deleteEntry, clearAll }
+  return { entries, saving, loadError, saveError, savePassword, deleteEntry, clearAll }
 }
