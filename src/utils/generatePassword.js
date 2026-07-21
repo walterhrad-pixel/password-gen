@@ -1,3 +1,5 @@
+import zxcvbn from 'zxcvbn'
+
 const CHAR_SETS = {
   uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   lowercase: 'abcdefghijklmnopqrstuvwxyz',
@@ -115,7 +117,6 @@ export function generatePronounceable(length) {
     }
   }
 
-  // Add a number and symbol at the end
   password += getSecureRandom(100)
   const symbols = '!@#$%&*'
   password += symbols[getSecureRandom(symbols.length)]
@@ -128,14 +129,12 @@ export function generatePassphrase(wordCount = 4, separator = '-') {
 
   for (let i = 0; i < wordCount; i++) {
     let word = WORD_LIST[getSecureRandom(WORD_LIST.length)]
-    // Capitalize first letter of first word
     if (i === 0) {
       word = word.charAt(0).toUpperCase() + word.slice(1)
     }
     words.push(word)
   }
 
-  // Add a random number at the end
   words.push(getSecureRandom(100).toString())
 
   return words.join(separator)
@@ -144,40 +143,13 @@ export function generatePassphrase(wordCount = 4, separator = '-') {
 export function calculateStrength(password, options, mode = 'random') {
   if (!password) return { score: 0, label: 'None' }
 
-  const length = password.length
-
-  if (mode === 'passphrase') {
-    const wordCount = password.split('-').length
-    if (wordCount >= 5) return { score: 4, label: 'Strong' }
-    if (wordCount >= 4) return { score: 3, label: 'Good' }
-    if (wordCount >= 3) return { score: 2, label: 'Fair' }
-    return { score: 1, label: 'Weak' }
-  }
-
-  // Count character types
-  let variety = 0
-  if (options.uppercase) variety++
-  if (options.lowercase) variety++
-  if (options.numbers) variety++
-  if (options.symbols) variety++
-
-  // Calculate score (1-4)
-  let score = 0
-
-  // Length contribution
-  if (length >= 8) score++
-  if (length >= 16) score++
-
-  // Variety contribution
-  if (variety >= 2) score++
-  if (variety >= 4) score++
-
-  score = Math.min(4, Math.max(1, score))
-
-  const labels = ['', 'Weak', 'Fair', 'Good', 'Strong']
+  const result = zxcvbn(password)
+  const labels = ['', 'Weak', 'Weak', 'Fair', 'Good', 'Strong']
+  const uiScore = Math.max(1, result.score + 1 > 4 ? 4 : result.score + 1)
 
   return {
-    score,
-    label: labels[score]
+    score: uiScore,
+    label: labels[uiScore],
+    crackTime: result.crack_times_display.offline_slow_hashing_1e4_per_second,
   }
 }
