@@ -24,7 +24,7 @@ A secure, browser-based password generator with user authentication and a person
 
  ## Live Demo
 
-[password-gen-lac.vercel.app](https://password-gen-lac.vercel.app/)
+[password-gen-lac.vercel.app](https://password-gen-lac.vercel.app/) ...CURRENTLY DOWN
 
 ## What it does
 When a user visits the app, they land on the authentication screen. They register with an email and password or sign in to an existing account. Supabase handles sessions, secure password hashing, and persistence across tabs and devices. Once signed in, the generator loads immediately.
