@@ -1,6 +1,5 @@
-// src/hooks/useAuth.js
 import { useState, useEffect } from 'react'
-import { supabase } from '../superbase/client'
+import { supabase } from '../supabase/client'
 
 const FRIENDLY_ERRORS = {
   'Invalid login credentials':       'Invalid email or password.',
