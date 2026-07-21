@@ -17,7 +17,6 @@ const buildStyles = (dark) => `
     transition: background 300ms ease;
   }
 
-  /* ── Dark mode toggle ── */
   .va-theme-toggle {
     position: fixed;
     top: 18px;
@@ -48,7 +47,6 @@ const buildStyles = (dark) => `
     font-size: 12px;
   }
 
-  /* ── Screen 1: Splash ── */
   .va-splash {
     position: fixed;
     inset: 0;
@@ -76,7 +74,6 @@ const buildStyles = (dark) => `
     margin-top: 20px;
   }
 
-  /* ── Screen 2: Landing ── */
   .va-landing {
     position: fixed;
     inset: 0;
@@ -171,7 +168,6 @@ const buildStyles = (dark) => `
   }
   .va-btn-secondary:active { transform: scale(.98); }
 
-  /* ── Screen 3/4: Auth form (slides up) ── */
   .va-form-screen {
     position: fixed;
     inset: 0;
@@ -188,7 +184,6 @@ const buildStyles = (dark) => `
     transform: translateY(0);
   }
 
-  /* Top yellow header */
   .va-form-top {
     background: #F5C842;
     padding: clamp(40px, 8vh, 72px) clamp(24px, 6vw, 80px) clamp(28px, 5vh, 48px);
@@ -234,7 +229,6 @@ const buildStyles = (dark) => `
     color: rgba(0,0,0,0.5);
   }
 
-  /* Form body */
   .va-form-body {
     flex: 1;
     padding: clamp(24px, 5vh, 48px) clamp(24px, 6vw, 80px) clamp(32px, 6vh, 60px);
@@ -317,7 +311,6 @@ const buildStyles = (dark) => `
   .va-form-submit:active { transform: translateY(2px); box-shadow: 0 2px 0 #D4A500; }
   .va-form-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: 0 4px 0 #D4A500; }
 
-  /* Decorative bg orbs for landing */
   .va-orb {
     position: fixed;
     border-radius: 50%;
@@ -352,7 +345,6 @@ const buildStyles = (dark) => `
   }
 `
 
-// ── Vault mascot SVG ──────────────────────────────────────────────────────────
 function VaultMascot({ size = 120, smiling = false }) {
   return (
     <svg width={size} height={size} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -377,8 +369,7 @@ function VaultMascot({ size = 120, smiling = false }) {
   )
 }
 
-// ── Main component ────────────────────────────────────────────────────────────
-export default function AuthPage({ login, register, error }) {
+export default function AuthPage({ login, register, error, onGuest }) {
   const [dark, setDark] = useState(
     () => window.matchMedia('(prefers-color-scheme: dark)').matches
   )
@@ -389,7 +380,6 @@ export default function AuthPage({ login, register, error }) {
   const [password, setPassword] = useState('')
   const [localError, setLocalError] = useState('')
 
-  // Splash auto-advance
   useEffect(() => {
     if (screen !== 'splash') return
     const t1 = setTimeout(() => setSplashOut(true), 1800)
@@ -436,7 +426,6 @@ export default function AuthPage({ login, register, error }) {
       <style>{buildStyles(dark)}</style>
       <div className="vaultly-auth">
 
-        {/* ── Dark mode toggle ── */}
         {screen !== 'splash' && (
           <button
             className="va-theme-toggle"
@@ -447,13 +436,11 @@ export default function AuthPage({ login, register, error }) {
           </button>
         )}
 
-        {/* ── Screen 1: Splash ── */}
         <div className={`va-splash ${splashOut ? 'exit' : ''}`}>
           <VaultMascot size={Math.min(180, window.innerWidth * 0.35)} smiling />
           <span className="va-splash-name">Vaultly</span>
         </div>
 
-        {/* ── Screen 2: Landing ── */}
         <div className={`va-landing ${screen === 'landing' ? 'visible' : ''}`}>
           <div className="va-orb va-orb-1" />
           <div className="va-orb va-orb-2" />
@@ -472,11 +459,19 @@ export default function AuthPage({ login, register, error }) {
               <button className="va-btn-secondary" onClick={() => openForm('login')}>
                 I already have an account
               </button>
+              {onGuest && (
+                <button
+                  className="va-btn-secondary"
+                  style={{ border: 'none', opacity: 0.7 }}
+                  onClick={onGuest}
+                >
+                  Continue without an account
+                </button>
+              )}
             </div>
           </div>
         </div>
 
-        {/* ── Screen 3 & 4: Auth forms ── */}
         <div className={`va-form-screen ${isForm ? 'open' : ''}`}>
           <div className="va-form-top">
             <button className="va-back-btn" onClick={goBack}>←</button>
