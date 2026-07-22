@@ -24,7 +24,7 @@ A secure, browser-based password generator with user authentication and a person
 
  ## Live Demo
 
-[password-gen-lac.vercel.app](https://password-gen-lac.vercel.app/) ...CURRENTLY DOWN
+[password-gen-lac.vercel.app](https://password-gen-lac.vercel.app/)
 
 ### What it does
  
