@@ -35,29 +35,3 @@ The following inventory describes the files present in the supplied project arch
 | `zxcvbn` | Password strength and offline crack-time estimation. |
 | `vite` | Development server and production bundling. |
 | `@vitejs/plugin-react` | React support in Vite. |
-
-## References
-
-[1]: ../README.md "Vaultly project README"
-
-[2]: ../package.json "Vaultly package metadata and scripts"
-
-[3]: ../src/App.jsx "Vaultly root React component"
-
-[4]: ../src/components/AuthPage.jsx "Vaultly authentication page"
-
-[5]: ../src/components/VaultUnlock.jsx "Vaultly vault unlock component"
-
-[6]: ../src/components/Vault.jsx "Vaultly vault component"
-
-[7]: ../src/hooks/useAuth.js "Vaultly authentication hook"
-
-[8]: ../src/hooks/useVaultKey.js "Vaultly vault key management hook"
-
-[9]: ../src/hooks/useVault.js "Vaultly encrypted vault persistence hook"
-
-[10]: ../src/utils/generatePassword.js "Vaultly password generation and strength utilities"
-
-[11]: ../src/utils/vaultCrypto.js "Vaultly vault cryptography utilities"
-
-[12]: ../migration.sql "Vaultly Supabase database migration"
