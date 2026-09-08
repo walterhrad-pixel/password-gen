@@ -53,15 +53,3 @@ Keep the encryption format stable unless a migration strategy exists for old row
 Review changes to Supabase policies with the same care as application code. A policy regression can expose or block records independently of the React implementation.
 
 Avoid adding telemetry that captures generated passwords, labels, vault entries, passphrases, or decrypted data. Keep error messages useful without including sensitive values.
-
-## References
-
-[1]: ../package.json "Vaultly package metadata and scripts"
-
-[2]: ../migration.sql "Vaultly Supabase database migration"
-
-[3]: ../src/hooks/useVault.js "Vaultly encrypted vault persistence hook"
-
-[4]: ../src/utils/vaultCrypto.js "Vaultly vault cryptography utilities"
-
-[5]: ../src/App.jsx "Vaultly root React component"
