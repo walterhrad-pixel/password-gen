@@ -64,15 +64,3 @@ npm run build
 The output is a static `dist` directory and can be served by Vercel or another static hosting provider. Configure the same `VITE_SUPABASE_URL` and `VITE_SUPABASE_KEY` values in the hosting provider’s build environment.
 
 For Vercel, import the repository, use the detected Vite settings, and confirm that the build output is `dist`. Configure Supabase redirect and site URLs if the project’s authentication settings require them.
-
-## References
-
-[1]: ../README.md "Vaultly project README"
-
-[2]: ../.env.example "Vaultly environment variable template"
-
-[3]: ../migration.sql "Vaultly Supabase database migration"
-
-[4]: ../package.json "Vaultly package metadata and scripts"
-
-[5]: https://supabase.com "Supabase platform"
