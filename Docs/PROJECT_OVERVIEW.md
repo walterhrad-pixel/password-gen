@@ -47,14 +47,3 @@ The interface regenerates a password when generation controls change. Pressing `
 | Client encryption | Web Crypto API, PBKDF2, AES-GCM |
 | Strength estimation | `zxcvbn` |
 | Deployment artifact | Static `dist` output from `vite build` |
-
-## References
-
-[1]: ../README.md "Vaultly project README"
-
-[2]: ../src/App.jsx "Vaultly root React component"
-
-[3]: ../src/utils/generatePassword.js "Vaultly password generation and strength utilities"
-
-[4]: ../package.json "Vaultly package metadata and scripts"
-
