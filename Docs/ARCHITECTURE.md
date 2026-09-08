@@ -63,19 +63,3 @@ On save, the password and trimmed label are encrypted as a JSON object. The resu
 | `vault_meta` | One encryption metadata record per user. | `salt`, `check_ciphertext`, `check_iv` |
 
 Both tables reference `auth.users`, enable Row Level Security, and use policies based on `auth.uid() = user_id`.
-
-## References
-
-[1]: ../src/App.jsx "Vaultly root React component"
-
-[2]: ../src/hooks/useAuth.js "Vaultly authentication hook"
-
-[3]: ../src/hooks/useVault.js "Vaultly encrypted vault persistence hook"
-
-[4]: ../src/hooks/useVaultKey.js "Vaultly vault key management hook"
-
-[5]: ../src/utils/generatePassword.js "Vaultly password generation and strength utilities"
-
-[6]: ../src/utils/vaultCrypto.js "Vaultly vault cryptography utilities"
-
-[7]: ../migration.sql "Vaultly Supabase database migration"
