@@ -39,17 +39,3 @@ The project contains no automated test suite in the supplied archive. Security-s
 ## Operational recommendations
 
 Use HTTPS in every deployed environment. Restrict Supabase redirect URLs to the intended application origins. Review dependency updates before deployment. Do not log plaintext passwords, vault passphrases, derived keys, or decrypted vault entries. Treat changes to `migration.sql` as security-sensitive because they can alter ownership controls or delete data.
-
-## References
-
-[1]: ../src/utils/vaultCrypto.js "Vaultly vault cryptography utilities"
-
-[2]: ../src/hooks/useVaultKey.js "Vaultly vault key management hook"
-
-[3]: ../src/hooks/useVault.js "Vaultly encrypted vault persistence hook"
-
-[4]: ../migration.sql "Vaultly Supabase database migration"
-
-[5]: ../src/utils/generatePassword.js "Vaultly password generation and strength utilities"
-
-[6]: ../src/App.jsx "Vaultly root React component"
